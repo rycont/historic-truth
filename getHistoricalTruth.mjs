@@ -6,7 +6,6 @@ function flatten(arr) {
     }, []);
   }
 export default () => new Promise((resoleve, reject) => {
-    console.log('음?')
     request({
         method: 'GET',
         url: 'http://contents.history.go.kr/front/th/list.do',

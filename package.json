@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "colog": "^1.0.4",
     "dotenv": "^8.0.0",
     "request": "^2.88.0",
     "twitter": "^1.7.1"
