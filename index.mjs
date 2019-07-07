@@ -13,10 +13,16 @@ const { consumer_key,
 const client = new Twitter({
     consumer_key, consumer_secret, access_token_key, access_token_secret
 })
-console.log({ consumer_key,
-    consumer_secret,
-    access_token_key,
-    access_token_secret })
+log.headerInfo('Authentication Info..')
+log.info('consumer_key')
+console.log(consumer_key)
+log.info('consumer_secret')
+console.log(consumer_secret)
+log.info('access_token_key')
+console.log(access_token_key)
+log.info('access_token_secret')
+console.log(access_token_secret)
+console.log()
 
 getHistoricalTruth().then(list => {
     const date = new Date()
@@ -26,8 +32,8 @@ ${v.year}: ${v.content.length === 1 ? v.content[0] : v.content.join('\n\n')}`
     )
     log.headerInfo('오늘의 역사적 사실..')
     truthes.forEach(v => console.log(v, '\n'))
-    tweet(client, truthes[0])
-    tweet(client, truthes[1])
-    tweet(client, truthes[2])
+    tweet(client, truthes[0]).catch(e => console.log(e))
+    tweet(client, truthes[1]).catch(e => console.log(e))
+    tweet(client, truthes[2]).catch(e => console.log(e))
 })
 
