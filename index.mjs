@@ -12,7 +12,11 @@ const { consumer_key,
 
 const client = new Twitter({
     consumer_key, consumer_secret, access_token_key, access_token_secret
-})    
+})
+console.log({ consumer_key,
+    consumer_secret,
+    access_token_key,
+    access_token_secret })
 
 getHistoricalTruth().then(list => {
     const date = new Date()
