@@ -1,0 +1,27 @@
+{
+  "name": "historic-truth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.0.0",
+    "request": "^2.88.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wjdgks1224/historic-truth.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wjdgks1224/historic-truth/issues"
+  },
+  "homepage": "https://github.com/wjdgks1224/historic-truth#readme"
+}
