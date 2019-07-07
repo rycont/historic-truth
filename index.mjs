@@ -32,8 +32,6 @@ ${v.year}: ${v.content.length === 1 ? v.content[0] : v.content.join('\n\n')}`
     )
     log.headerInfo('오늘의 역사적 사실..')
     truthes.forEach(v => console.log(v, '\n'))
-    tweet(client, truthes[0]).catch(e => console.log(e))
-    tweet(client, truthes[1]).catch(e => console.log(e))
-    tweet(client, truthes[2]).catch(e => console.log(e))
+    Promise.all([tweet(client, truthes[0]), tweet(client, truthes[1]), tweet(client, truthes[2])]).catch(e => console.log(e))
 })
 
