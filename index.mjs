@@ -3,7 +3,9 @@ import env from 'dotenv'
 import getHistoricalTruth from './getHistoricalTruth'
 import tweet from './tweetComment.mjs'
 import { log } from './logger'
-env.config()
+env.config({
+    path: `${__dirname}/../.env`
+})
 
 log('headerInfo', '\n\n트윗봇 시작됨')
 
@@ -36,8 +38,6 @@ checkAndLog('consumer_key')
 checkAndLog('consumer_secret')
 checkAndLog('access_token_key')
 checkAndLog('access_token_secret')
-
-log('success', '모든 인증키들을 가져오는데 성공하였습니다.')
 
 const client = new Twitter(keys)
 
