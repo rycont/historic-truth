@@ -14,7 +14,9 @@ export default () => new Promise((resoleve, reject) => {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
         }
     }, (err, res, body) => {
-        if(err) reject(err)
+        if(err) {
+            reject(err)
+        }
         const $ = cheerio.load(body)
         const truthes = []
         $('.today_table.mt10 tr').each((i, el) => {
