@@ -8,7 +8,7 @@ env.config({
     path: `${fs.realpathSync('.')}/./.env`
 })
 
-console.log(`${fs.realpathSync('.')}\\.\\.env`)
+log(`env location: ${fs.realpathSync('.')}\\.\\.env`)
 
 log('headerInfo', '\n\n트윗봇 시작됨')
 
