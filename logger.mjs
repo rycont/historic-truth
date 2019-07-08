@@ -1,14 +1,30 @@
 import fs from 'fs'
 import colog from 'colog'
-const stream = fs.createWriteStream(`/log/tweet/${new Date().toJSON().split('T')[0]}__twitter_log.txt`, {
-    flags: 'a'
-})
 
-export function log(type, message) {
-    if(type.includes('DISPLAY:')) {
-        colog[type.split('Y:')[1]](message)
-        return
-    }
-    colog[type](message)
-    stream.write(`${new Date().toISOString()} [${type}]: ${message}\n`)
+
+export function log(type, _message, _config = {}) {
+    return new Promise((resolve, reject) => {
+        const config = Object.assign({
+            displayOnly: false
+        }, _config)
+        
+        colog[type](_message)
+        if(config.displayOnly) {
+            resolve()
+            return
+        }
+        const path = `/log/tweet/${new Date().toJSON().split('T')[0]}__twitter_log.txt`
+        const message = `${new Date().toISOString()} [${type}]: ${_message}\n`
+        fs.appendFile(path,
+        message, err => {
+            if(err) {
+                resolve(err)
+                return
+            }
+            resolve({
+                path,
+                message
+            })
+        })
+    })
 }
