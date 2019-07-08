@@ -1,24 +1,14 @@
 import Twitter from 'twitter'
-import env from 'dotenv'
 import fs from 'fs'
 import getHistoricalTruth from './getHistoricalTruth'
 import tweet from './tweetComment.mjs'
 import { log } from './logger'
-env.config({
-    path: `${fs.realpathSync('.')}/./.env`
-})
+import keys from './keys.json'
 
 log('info', 'env location')
 log('log', `${fs.realpathSync('.')}/./.env`)
 
 log('headerInfo', '\n\n트윗봇 시작됨')
-
-const keys = {
-    consumer_key: process.env.consumer_key,
-    consumer_secret: process.env.consumer_secret,
-    access_token_key: process.env.access_token_key,
-    access_token_secret: process.env.access_token_secret
-}
 
 async function checkAndLog(key) {
     if(!keys[key]) {
