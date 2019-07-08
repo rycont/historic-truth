@@ -9,7 +9,7 @@ env.config({
 })
 
 log('info', 'env location')
-log('log', `${fs.realpathSync('.')}\\.\\.env`)
+log('log', `${fs.realpathSync('.')}/./.env`)
 
 log('headerInfo', '\n\n트윗봇 시작됨')
 
