@@ -1,11 +1,14 @@
 import Twitter from 'twitter'
 import env from 'dotenv'
+import fs from 'fs'
 import getHistoricalTruth from './getHistoricalTruth'
 import tweet from './tweetComment.mjs'
 import { log } from './logger'
 env.config({
-    path: `${__dirname}/../.env`
+    path: `${fs.realpathSync('.')}/./.env`
 })
+
+console.log(`${fs.realpathSync('.')}\\.\\.env`)
 
 log('headerInfo', '\n\n트윗봇 시작됨')
 
