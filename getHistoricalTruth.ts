@@ -5,7 +5,10 @@ function flatten(arr) {
       return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
     }, []);
   }
-export default () => new Promise((resoleve, reject) => {
+export default (): Promise<{
+    content: string[],
+    year: string
+}[]> => new Promise((resoleve, reject) => {
     request({
         method: 'GET',
         url: 'http://contents.history.go.kr/front/th/list.do',

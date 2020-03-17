@@ -1,4 +1,4 @@
-import fs from 'fs'
+import {appendFile} from 'fs'
 import colog from 'colog'
 
 
@@ -15,7 +15,7 @@ export function log(type, _message, _config = {}) {
         }
         const path = `/log/tweet/${new Date().toJSON().split('T')[0]}__twitter_log.txt`
         const message = `${new Date().toISOString()} [${type}]: ${_message}\n`
-        fs.appendFile(path,
+        appendFile(path,
         message, err => {
             if(err) {
                 resolve(err)
