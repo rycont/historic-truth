@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
+    "@types/twitter": "^1.7.0",
+    "axios": "^0.19.2",
     "colog": "^1.0.4",
-    "request": "^2.88.0",
+    "dotenv": "^8.2.0",
+    "jsdom": "^16.2.1",
     "twitter": "^1.7.1"
   },
   "devDependencies": {
+    "@types/jsdom": "^16.1.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.8.3"
   },

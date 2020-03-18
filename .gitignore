@@ -1,2 +1,5 @@
 /node_modules
+/.vscode
 keys.json
+test.ts
+.env

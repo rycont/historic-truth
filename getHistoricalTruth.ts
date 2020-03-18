@@ -1,38 +1,34 @@
-import request from 'request'
-import cheerio from 'cheerio'
-function flatten(arr) {
-    return arr.reduce(function (flat, toFlatten) {
-      return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-    }, []);
-  }
-export default (): Promise<{
-    content: string[],
-    year: string
-}[]> => new Promise((resoleve, reject) => {
-    request({
-        method: 'GET',
-        url: 'http://contents.history.go.kr/front/th/list.do',
-        headers:
-        {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36'
-        }
-    }, (err, res, body) => {
-        if(err) {
-            reject(err)
-        }
-        const $ = cheerio.load(body)
-        const truthes = []
-        $('.today_table.mt10 tr').each((i, el) => {
-            truthes.push({
-                content: $(el).children('td').text()
-                    .trim()
-                    .split('\n\t\t\t\t\t\n\t\t\t\n')
-                    .map(v => v.split('\n\t\t\t').join('\n출처: ')),
-                year: $(el).children('th').text().trim()
-            })
-        })
-        resoleve(truthes.reduce(function (flat, toFlatten) {
-            return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
-          }, []))
-    })
-})
+import axios from "axios";
+import { JSDOM } from "jsdom";
+import { Ttruth } from "./types";
+
+export default async (): Promise<Ttruth[]> => {
+  const response = await axios(
+    "http://contents.history.go.kr/front/th/list.do"
+  );
+  const document = JSDOM.fragment(response.data);
+  return [
+    ...((document.querySelectorAll(
+      ".today_table.mt10 tr"
+    ) as unknown) as HTMLTableRowElement[])
+  ]
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 3)
+    .map(e => {
+      const year = e.getElementsByTagName("th")[0].textContent!.trim();
+      const content = e
+        .getElementsByTagName("td")[0]
+        .textContent!.trim()
+        .split("\n");
+      const source = content
+        .slice(-1)
+        .join("\n")
+        .trim();
+      const event = content.slice(0, -1)[0].trim();
+      return {
+        source,
+        event,
+        year: parseInt(year, 10)
+      };
+    });
+};
