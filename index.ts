@@ -1,80 +1,35 @@
-import Twitter from "twitter";
-import { realpathSync } from "fs";
-import dotenv from "dotenv";
-import getHistoricalTruth from "./getHistoricalTruth";
-import tweet from "./tweetComment";
-import log from "./logger";
-import { Ttruth } from "./types";
-
-dotenv.config();
-
-log("info", "env location");
-log("log", `${realpathSync(".")}/./.env`);
-
-log("headerInfo", "\n\n트윗봇 시작됨");
-
-async function checkAndLog(key: string) {
-  const requestedValue = process.env[key];
-  if (!requestedValue) {
-    await log("error", `${key} is ${requestedValue}`);
-    await log("info", `Couldn't get ${key}, program stopped.`);
-    process.exit(1);
-  }
-  log("info", key, {
-    displayOnly: true
-  });
-  log("log", requestedValue, {
-    displayOnly: true
-  });
+interface History {
+  year: number;
+  content: string;
 }
 
-log("info", "Authentication Info..", {
-  displayOnly: true
-});
-checkAndLog("consumer_key");
-checkAndLog("consumer_secret");
-checkAndLog("access_token_key");
-checkAndLog("access_token_secret");
+const getStringBetween = (source: string, start: string, end: string) =>
+  source.split(start)[1]?.split(end)[0];
 
-const client = new Twitter({
-  consumer_key: process.env.consumer_key!,
-  consumer_secret: process.env.consumer_secret!,
-  access_token_key: process.env.access_token_key!,
-  access_token_secret: process.env.access_token_secret!
-});
+const getTodaysHistory = async (): Promise<History[]> => {
+  const plainText =
+    await (await fetch("http://contents.history.go.kr/front/th/list.do"))
+      .text();
+  const tableArea = getStringBetween(plainText, "</colgroup>", "</table>");
+  return (tableArea.split("<tr>").slice(1).map((row) => {
+    const year = +getStringBetween(row, "<th>", "</th>").trim().slice(0, -1);
+    const content = getStringBetween(row, "<td>", "<div").trim().replace(
+      "[음]",
+      "[음력] ",
+    );
+    return { year, content };
+  }));
+};
 
-function processReadiable(rawData: Ttruth[]) {
-  const date = new Date();
-  const today = `${date.getMonth() + 1}월 ${date.getDate()}일`;
-  return (
-    rawData
-      // 최종 출력 형식
-      //
-      //  M월 DD일 역사속 오늘은...(i / 3)
-      //  YYYY년: %CONTENT%
-      //  출처: %SOURCE%
-      .map(
-        ({ year, event, source }, i) => `${today} 역사속 오늘은... (${i +
-          1} / 3)
-${year}년: ${event}
-출처: ${source}`
-      )
-  );
+const getRandomHistory = async (): Promise<History[]> => {
+    const histories = [...await getTodaysHistory()].sort(() => 0.5 - Math.random())
+    return [...histories.slice(0, 3)].sort((a, b) => b.year - a.year)
 }
 
-(async () => {
-  const rawTruthes = await getHistoricalTruth();
-  const processed = processReadiable(rawTruthes);
-  log("info", "오늘의 역사적 사실..", {
-    displayOnly: true
-  });
-  processed.forEach(truth => {
-    console.log("\n", truth);
-    try {
-      tweet(client, truth);
-      log("success", "트윗에 성공하였습니다.");
-    } catch (err) {
-      log("error", `트윗에 실패했습니다, ${err.message}`);
-    }
-  });
-})();
+const formatHistory = (histories: History[]) => {
+    const date = new Date()
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 역사속 오늘은📜🇰🇷
+${histories.map(history => `*${history.year}년: ${history.content}`).join("\n")}`
+}
+
+getRandomHistory().then(formatHistory)
